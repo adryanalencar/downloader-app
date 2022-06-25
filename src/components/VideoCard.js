@@ -1,5 +1,29 @@
 import { useState } from 'react'
 
+function getValidThumnail(thumbnails){
+    /*
+        props.videoData.video.snippet.thumbnails.maxres?.url |
+        props.videoData.video.snippet.thumbnails.high?.url   |
+        props.videoData.video.snippet.thumbnails.medium?.url |
+        props.videoData.video.snippet.thumbnails.default?.url
+    **/
+    if(thumbnails.maxres){
+        return thumbnails.maxres.url;
+    }
+
+    if(thumbnails.high){
+        return thumbnails.high.url;
+    }
+
+    if(thumbnails.medium){
+        return thumbnails.medium.url;
+    }
+
+    if(thumbnails.default){
+        return thumbnails.default.url;
+    }
+}
+
 async function getDownloadLinks(url){
     var response = await fetch("https://downloader-api.herokuapp.com/youtube?url="+url);
     var data = await response.json();
@@ -34,7 +58,7 @@ const WhatsappButton = (props) => {
                 }, 1000);
             }}    
         >
-            <a href={`https://api.whatsapp.com/send?text=${window.location.href}`} target="_blank" rel="noopener noreferrer">
+            <a href={`https://api.whatsapp.com/send?text=Baixe vídeos do youtube aqui: ${window.location.href}`} target="_blank" rel="noopener noreferrer">
                 <img src="https://img.icons8.com/color/48/000000/whatsapp.png" alt="whatsapp" />
                 <span>Compartilhe para Desbloquear</span>
             </a>
@@ -51,7 +75,12 @@ const VideoCard = (props) => {
         <div className="card col-md-12 bg-dark">
             <div className="row g-0">
                 <div className="col-md-4">
-                <img src={props.videoData.video.snippet.thumbnails.maxres.url} className="img-fluid rounded-start" alt="..." />
+                <img src={
+                        getValidThumnail(props.videoData.video.snippet.thumbnails)
+                    } 
+                    className="img-fluid rounded-start" 
+                    alt="..." 
+                />
                 </div>
                 <div className="col-md-8">
                     <div className="card-body">
